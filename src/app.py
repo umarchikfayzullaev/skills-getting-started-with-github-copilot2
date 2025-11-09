@@ -59,6 +59,10 @@ activities = {
     },
     "Robotics Club": {
         "description": "Design, build, and program robots for competitions",
+        "schedule": "Wednesdays, 3:30 PM - 5:30 PM",
+        "max_participants": 18,
+        "participants": ["oliver@mergington.edu", "charlotte@mergington.edu"]
+    },
     "Programming Class": {
         "description": "Learn programming fundamentals and build software projects",
         "schedule": "Tuesdays and Thursdays, 3:30 PM - 4:30 PM",
