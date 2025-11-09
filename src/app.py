@@ -1,3 +1,12 @@
+@app.post("/activities/{activity_name}/unregister")
+def unregister_from_activity(activity_name: str, email: str):
+    """Удалить участника из активности"""
+    if activity_name not in activities:
+        raise HTTPException(status_code=404, detail="Activity not found")
+    if email not in activities[activity_name]["participants"]:
+        raise HTTPException(status_code=400, detail="Participant not found in this activity")
+    activities[activity_name]["participants"].remove(email)
+    return {"message": f"{email} удалён из {activity_name}"}
 """
 High School Management System API
 

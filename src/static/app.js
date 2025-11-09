@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ? `
             <p><strong>Current Participants:</strong></p>
             <ul class="participants-list">
-              ${details.participants.map(email => `<li>${email}</li>`).join('')}
+              ${details.participants.map(email => `<li class='participant-item'><span class='participant-email'>${email}</span> <button class='delete-participant' title='Удалить участника' data-activity='${name}' data-email='${email}'>&#128465;</button></li>`).join('')}
             </ul>
           `
           : '<p><em>No participants yet - be the first to sign up!</em></p>';
@@ -39,12 +39,61 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
 
         activitiesList.appendChild(activityCard);
+      });
 
-        // Add option to select dropdown
+      // Обновить select-опции без дублирования
+      activitySelect.innerHTML = '<option value="">-- Select an activity --</option>';
+      Object.keys(activities).forEach(name => {
         const option = document.createElement("option");
         option.value = name;
         option.textContent = name;
         activitySelect.appendChild(option);
+      });
+
+      // Добавить обработчик удаления участника
+      document.querySelectorAll('.delete-participant').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const activity = btn.getAttribute('data-activity');
+          const email = btn.getAttribute('data-email');
+          if (!activity || !email) return;
+          if (!confirm(`Удалить участника ${email} из "${activity}"?`)) return;
+          try {
+            const response = await fetch(`/activities/${encodeURIComponent(activity)}/unregister?email=${encodeURIComponent(email)}`, {
+              method: 'POST',
+            });
+            if (response.ok) {
+              fetchActivities();
+            } else {
+              const result = await response.json();
+              alert(result.detail || 'Ошибка удаления участника');
+            }
+          } catch (err) {
+            alert('Ошибка сети при удалении участника');
+          }
+        });
+      });
+
+      // Добавить обработчик удаления участника
+      document.querySelectorAll('.delete-participant').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const activity = btn.getAttribute('data-activity');
+          const email = btn.getAttribute('data-email');
+          if (!activity || !email) return;
+          if (!confirm(`Удалить участника ${email} из "${activity}"?`)) return;
+          try {
+            const response = await fetch(`/activities/${encodeURIComponent(activity)}/unregister?email=${encodeURIComponent(email)}`, {
+              method: 'POST',
+            });
+            if (response.ok) {
+              fetchActivities();
+            } else {
+              const result = await response.json();
+              alert(result.detail || 'Ошибка удаления участника');
+            }
+          } catch (err) {
+            alert('Ошибка сети при удалении участника');
+          }
+        });
       });
     } catch (error) {
       activitiesList.innerHTML = "<p>Failed to load activities. Please try again later.</p>";
